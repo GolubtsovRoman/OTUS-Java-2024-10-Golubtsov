@@ -1,9 +1,12 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
 import org.gradle.plugins.ide.idea.model.IdeaLanguageLevel
+import org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES
 
 plugins {
     id("java")
     idea
     id("io.spring.dependency-management")
+    id("org.springframework.boot") apply false
 }
 
 idea {
@@ -25,12 +28,20 @@ allprojects {
         mavenCentral()
     }
 
+    val testcontainersBom: String by project
     val guava: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
         dependencies {
-            dependency("com.google.guava:guava:$guava")
+            dependencies {
+                imports {
+                    mavenBom(BOM_COORDINATES)
+                    mavenBom("org.testcontainers:testcontainers-bom:$testcontainersBom")
+                }
+
+                dependency("com.google.guava:guava:$guava")
+            }
         }
     }
 }
@@ -45,5 +56,28 @@ subprojects {
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
         options.compilerArgs.addAll(listOf("-Xlint:all,-serial,-processing"))
+    }
+
+    tasks.withType<Test> {
+        useJUnitPlatform()
+        testLogging.showExceptions = true
+        reports {
+            junitXml.required.set(true)
+            html.required.set(true)
+        }
+    }
+
+}
+
+
+tasks {
+    val managedVersions by registering {
+        doLast {
+            project.extensions.getByType<DependencyManagementExtension>()
+                .managedVersions
+                .toSortedMap()
+                .map { "${it.key}:${it.value}" }
+                .forEach(::println)
+        }
     }
 }

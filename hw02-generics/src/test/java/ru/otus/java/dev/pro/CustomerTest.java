@@ -1,10 +1,7 @@
-package homework;
+package ru.otus.java.dev.pro;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.otus.java.dev.pro.homework.Customer;
-import ru.otus.java.dev.pro.homework.CustomerReverseOrder;
-import ru.otus.java.dev.pro.homework.CustomerService;
 
 import java.util.HashMap;
 import java.util.Map;

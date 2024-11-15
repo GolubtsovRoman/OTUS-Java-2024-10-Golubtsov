@@ -1,14 +1,16 @@
-package ru.otus.java.dev.pro.homework;
+package ru.otus.java.dev.pro;
 
-import java.util.*;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 public class CustomerService {
 
-    private final TreeMap<Customer, String> customerMap = new TreeMap<>(new CustomerComparator());
+    private final NavigableMap<Customer, String> customerMap = new TreeMap<>(new CustomerComparator());
 
 
     public Map.Entry<Customer, String> getSmallest() {
-        return copyOf(customerMap.entrySet().stream().findFirst().orElseThrow(NoSuchElementException::new));
+        return copyOf(customerMap.firstEntry());
 
     }
 
