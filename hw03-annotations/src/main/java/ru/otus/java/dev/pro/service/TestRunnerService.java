@@ -1,9 +1,12 @@
 package ru.otus.java.dev.pro.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.java.dev.pro.annotation.After;
 import ru.otus.java.dev.pro.annotation.Before;
 import ru.otus.java.dev.pro.annotation.Test;
 import ru.otus.java.dev.pro.enums.StatusTest;
+import ru.otus.java.dev.pro.model.TestResult;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,8 +15,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -22,8 +25,11 @@ import static ru.otus.java.dev.pro.enums.StatusTest.OK;
 
 public class TestRunnerService {
 
-    public void run(String className) {
-        TestLogger.printHeadline("Start tests for class \"%s\"".formatted(className));
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestRunnerService.class);
+
+
+    public TestResult run(String className) {
+        printHeadline("Start tests for class \"%s\"".formatted(className));
 
         Class<?> testClass = getClassByName(className);
 
@@ -32,13 +38,13 @@ public class TestRunnerService {
         var afterMethods = new ArrayList<Method>();
 
         Arrays.stream(testClass.getDeclaredMethods()).forEach(method -> {
-            if (Objects.nonNull(method.getAnnotation(Test.class))) {
+            if (method.isAnnotationPresent(Test.class)) {
                 testMethods.add(method);
             }
-            if (Objects.nonNull(method.getAnnotation(Before.class))) {
+            if (method.isAnnotationPresent(Before.class)) {
                 beforeMethods.add(method);
             }
-            if (Objects.nonNull(method.getAnnotation(After.class))) {
+            if (method.isAnnotationPresent(After.class)) {
                 afterMethods.add(method);
             }
         });
@@ -48,17 +54,17 @@ public class TestRunnerService {
                 testMethod -> runTest(testClass, testMethod, beforeMethods, afterMethods)
         ));
 
-        TestLogger.printHeadline("End tests for class \"%s\"".formatted(className));
-        TestLogger.printStatistics(testingResult);
+        printHeadline("End tests for class \"%s\"".formatted(className));
+        return new TestResult(testingResult);
     }
 
 
     private StatusTest runTest(Class<?> testClass,
                          Method testMethod,
-                         ArrayList<Method> beforeMethods,
-                         ArrayList<Method> afterMethods) {
+                         List<Method> beforeMethods,
+                         List<Method> afterMethods) {
         String methodFullName = testClass.getName() + '.' + testMethod.getName();
-        TestLogger.printHeadline("Start test ::: %s".formatted(methodFullName));
+        printHeadline("Start test ::: %s".formatted(methodFullName));
         Object instance = getInstance(testClass);
 
         beforeMethods.forEach(method -> runMethod(method, instance));
@@ -69,13 +75,13 @@ public class TestRunnerService {
             PrintWriter pw = new PrintWriter(sw);
             throwable.printStackTrace(pw);
             String stringStackTrace = sw.toString();
-            TestLogger.printHeadline("End test ::: %s ::: %s\nReason: %s\nStacktrace:\n%s"
+            printHeadline("End test ::: %s ::: %s\nReason: %s\nStacktrace:\n%s"
                     .formatted(ERROR, methodFullName, throwable.getMessage(), stringStackTrace)
             );
             return ERROR;
         } else {
             afterMethods.forEach(method -> runMethod(method, instance));
-            TestLogger.printHeadline("End test ::: %s ::: %s".formatted(OK,  methodFullName));
+            printHeadline("End test ::: %s ::: %s".formatted(OK,  methodFullName));
             return OK;
         }
     }
@@ -85,7 +91,7 @@ public class TestRunnerService {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
             var errMsg = "Class for testing not found. Name: %s".formatted(className);
-            TestLogger.getLogger().error(errMsg);
+            LOGGER.error(errMsg);
             throw new RuntimeException(errMsg, e);
         }
     }
@@ -96,7 +102,7 @@ public class TestRunnerService {
             return constructor.newInstance();
         } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
             var errMsg = "Can't get instance for class: %s".formatted(clazz.getName());
-            TestLogger.getLogger().error(errMsg);
+            LOGGER.error(errMsg);
             throw new RuntimeException(errMsg, e);
         }
     }
@@ -106,12 +112,19 @@ public class TestRunnerService {
             method.invoke(instance);
         } catch (IllegalAccessException iae) {
             var errMsg = "Can't run method: %s. Reason: %s".formatted(method.getName(), iae.getMessage());
-            TestLogger.getLogger().error(errMsg);
+            LOGGER.error(errMsg);
             throw new RuntimeException(errMsg, iae);
         } catch (InvocationTargetException ite) {
             return Optional.of(ite.getTargetException());
         }
         return Optional.empty();
+    }
+
+    private void printHeadline(String message) {
+        String border = "=".repeat(20);
+        LOGGER.info(border);
+        LOGGER.info(message);
+        LOGGER.info(border);
     }
 
 }
