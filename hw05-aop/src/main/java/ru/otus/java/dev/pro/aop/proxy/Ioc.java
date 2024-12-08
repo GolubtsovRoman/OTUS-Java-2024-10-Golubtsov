@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Ioc {
 
@@ -46,7 +47,7 @@ public class Ioc {
                 if (args != null && args.length > 0) {
                     infoMethod
                             .append(", param(s):")
-                            .append(String.join(", ", Arrays.stream(args).map(Object::toString).toList()));
+                            .append(Arrays.stream(args).map(Object::toString).collect(Collectors.joining(", ")));
                 } else {
                     infoMethod
                             .append(", no params");
