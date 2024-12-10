@@ -2,7 +2,7 @@ package ru.otus.java.dev.pro.aop.proxy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.java.dev.pro.aop.annotation.LogParameters;
+import ru.otus.java.dev.pro.aop.annotation.Log;
 import ru.otus.java.dev.pro.service.SmokeService;
 import ru.otus.java.dev.pro.service.SmokeServiceImpl;
 
@@ -26,19 +26,25 @@ public class Ioc {
     }
 
     static class DemoInvocationHandler implements InvocationHandler {
-        private final SmokeService myClass;
 
-        DemoInvocationHandler(SmokeService myClass) {
-            this.myClass = myClass;
+        private final Class<?> myClass;
+
+        private final Object object;
+
+        private final List<String> annotatedSignatureMethodList;
+
+
+        DemoInvocationHandler(Object object) {
+            this.object = object;
+            this.myClass = object.getClass();
+            this.annotatedSignatureMethodList = Arrays.stream(myClass.getDeclaredMethods())
+                    .filter(myClassMethod -> myClassMethod.isAnnotationPresent(Log.class))
+                    .map(this::getSignatureMethod)
+                    .toList();
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            List<String> annotatedSignatureMethodList = Arrays.stream(myClass.getClass().getDeclaredMethods())
-                    .filter(myClassMethod -> myClassMethod.isAnnotationPresent(LogParameters.class))
-                    .map(this::getSignatureMethod)
-                    .toList();
-
             String proxySignatureMethod = getSignatureMethod(method);
             LOG.debug("invoking method: {}", proxySignatureMethod);
 
@@ -55,7 +61,7 @@ public class Ioc {
                 LOG.info(infoMethod.toString());
             }
 
-            return method.invoke(myClass, args);
+            return method.invoke(object, args);
         }
 
         @Override
