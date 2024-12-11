@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Ioc {
@@ -31,7 +31,7 @@ public class Ioc {
 
         private final Object object;
 
-        private final List<String> annotatedSignatureMethodList;
+        private final Set<String> annotatedSignatureMethodList;
 
 
         DemoInvocationHandler(Object object) {
@@ -40,7 +40,7 @@ public class Ioc {
             this.annotatedSignatureMethodList = Arrays.stream(myClass.getDeclaredMethods())
                     .filter(myClassMethod -> myClassMethod.isAnnotationPresent(Log.class))
                     .map(this::getSignatureMethod)
-                    .toList();
+                    .collect(Collectors.toSet());
         }
 
         @Override
