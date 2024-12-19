@@ -1,14 +1,6 @@
 rootProject.name = "OTUS-Java-2024-10-Golubtsov"
 
 
-
-include("hw01-gradle")
-include("hw02-generics")
-include("hw03-annotations")
-include("hw04-gc")
-
-
-
 pluginManagement {
     val jgitver: String by settings
     val dependencyManagement: String by settings
@@ -30,4 +22,10 @@ pluginManagement {
         id("com.diffplug.spotless") version spotless
     }
 }
+
+include("hw01-gradle")
+include("hw02-generics")
+include("hw03-annotations")
+include("hw04-gc")
 include("hw05-aop")
+include("hw06-solid")
