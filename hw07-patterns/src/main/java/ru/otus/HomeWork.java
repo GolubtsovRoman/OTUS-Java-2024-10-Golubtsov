@@ -1,6 +1,20 @@
 package ru.otus;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.otus.handler.ComplexProcessor;
+import ru.otus.listener.ListenerPrinterConsole;
+import ru.otus.model.Message;
+import ru.otus.model.ObjectForMessage;
+import ru.otus.processor.LoggerProcessor;
+import ru.otus.processor.ProcessorConcatFields;
+import ru.otus.processor.ProcessorUpperField10;
+
+import java.util.List;
+
 public class HomeWork {
+
+    private static final Logger logger = LoggerFactory.getLogger(HomeWork.class);
 
     /*
     Реализовать to do:
@@ -16,9 +30,25 @@ public class HomeWork {
     */
 
     public static void main(String[] args) {
-        /*
-          по аналогии с Demo.class
-          из элеменов "to do" создать new ComplexProcessor и обработать сообщение
-        */
+        var processors = List.of(new ProcessorConcatFields(), new LoggerProcessor(new ProcessorUpperField10()));
+
+        var complexProcessor = new ComplexProcessor(processors, ex -> {});
+        var listenerPrinter = new ListenerPrinterConsole();
+        complexProcessor.addListener(listenerPrinter);
+
+        var field13 = new ObjectForMessage();
+        field13.setData(List.of("str1", "str2"));
+
+        var message = new Message.Builder(2L)
+                .field11("field11")
+                .field12("field12")
+                .field13(field13)
+                .build();
+
+        var result = complexProcessor.handle(message);
+        logger.info("result:{}", result);
+
+        complexProcessor.removeListener(listenerPrinter);
     }
+
 }
