@@ -1,13 +1,34 @@
 package ru.otus.dataprocessor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.otus.util.FileUtils;
+
 import java.util.Map;
 
 public class FileSerializer implements Serializer {
 
-    public FileSerializer(String fileName) {}
+    private final String fileName;
+
+    private final ObjectMapper mapper = new ObjectMapper();
+
+
+    public FileSerializer(String fileName) {
+        this.fileName = FileUtils.checkJsonFileName(fileName);
+    }
 
     @Override
     public void serialize(Map<String, Double> data) {
-        // формирует результирующий json и сохраняет его в файл
+        FileUtils.writeStringToFile(fileName, mapToJson(data));
     }
+
+
+    private String mapToJson(Map<String, Double> data) {
+        try {
+            return mapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            throw new FileProcessException("Can't parse JSON: %s".formatted(fileName));
+        }
+    }
+
 }
