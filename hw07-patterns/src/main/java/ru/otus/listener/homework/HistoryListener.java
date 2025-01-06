@@ -1,10 +1,11 @@
 package ru.otus.listener.homework;
 
+import ru.otus.listener.Listener;
+import ru.otus.model.Message;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import ru.otus.listener.Listener;
-import ru.otus.model.Message;
 
 public class HistoryListener implements Listener, HistoryReader {
 
@@ -13,7 +14,8 @@ public class HistoryListener implements Listener, HistoryReader {
 
     @Override
     public void onUpdated(Message msg) {
-        storage.put(msg.getId(), msg.toBuilder().build());
+        Message msgCopy = msg.copy();
+        storage.put(msgCopy.getId(), msgCopy);
     }
 
     @Override
