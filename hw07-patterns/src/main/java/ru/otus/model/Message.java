@@ -275,7 +275,11 @@ public class Message {
         }
 
         public Builder field13(ObjectForMessage field13) {
-            this.field13 = field13.copy();
+            if (field13 == null) {
+                this.field13 = null;
+            } else {
+                this.field13 = field13.copy();
+            }
             return this;
         }
 

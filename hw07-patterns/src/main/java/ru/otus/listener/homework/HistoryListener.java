@@ -20,6 +20,6 @@ public class HistoryListener implements Listener, HistoryReader {
 
     @Override
     public Optional<Message> findMessageById(long id) {
-        return Optional.of(storage.get(id).toBuilder().build());
+        return Optional.of(storage.get(id));
     }
 }
