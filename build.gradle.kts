@@ -30,6 +30,7 @@ allprojects {
 
     val testcontainersBom: String by project
     val guava: String by project
+    val jacksonDatabind: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -41,6 +42,8 @@ allprojects {
                 }
 
                 dependency("com.google.guava:guava:$guava")
+                dependency("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind")
+
             }
         }
     }
