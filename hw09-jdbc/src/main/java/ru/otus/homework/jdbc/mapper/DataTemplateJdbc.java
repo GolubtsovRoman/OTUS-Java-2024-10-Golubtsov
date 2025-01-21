@@ -39,7 +39,7 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                 }
                 return null;
             } catch (SQLException e) {
-                throw new DataTemplateException(e);
+                throw new DataTemplateException("Can't find by ID = %d".formatted(id), e);
             }
         });
     }
@@ -55,54 +55,58 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                         }
                         return entityList;
                     } catch (SQLException e) {
-                        throw new DataTemplateException(e);
+                        throw new DataTemplateException("Can't find all records", e);
                     }
                 })
-                .orElseThrow(() -> new RuntimeException("Unexpected error"));
+                .orElseThrow(() -> new DataTemplateException("Can't return all records, because query returned NULL"));
     }
 
     @Override
-    public long insert(Connection connection, T client) {
+    public long insert(Connection connection, T entity) {
         try {
-            return dbExecutor.executeStatement(connection, entitySQLMetaData.getInsertSql(), getValues(client));
+            return dbExecutor.executeStatement(connection, entitySQLMetaData.getInsertSql(), getValues(entity));
         } catch (Exception e) {
-            throw new DataTemplateException(e);
+            throw new DataTemplateException("Can't insert entity = %s. Reason: %s".formatted(entity, e.getMessage()), e);
         }
     }
 
     @Override
-    public void update(Connection connection, T client) {
-        List<Object> values = getValues(client);
-        values.add(getId(client));
+    public void update(Connection connection, T entity) {
+        List<Object> values = getValues(entity);
+        values.add(getId(entity));
         try {
             dbExecutor.executeStatement(connection, entitySQLMetaData.getUpdateSql(), values);
         } catch (Exception e) {
-            throw new DataTemplateException(e);
+            throw new DataTemplateException("Can't update entity = %s. Reason: %s".formatted(entity, e.getMessage()), e);
         }
     }
 
 
-    private List<Object> getValues(T client) {
+    private List<Object> getValues(T entity) {
         return entityClassMetaData.getFieldsWithoutId()
                 .stream()
                 .map(field -> {
                     field.setAccessible(true);
                     try {
-                        return field.get(client);
+                        return field.get(entity);
                     } catch (IllegalAccessException e) {
-                        throw new DataTemplateException(e);
+                        throw new DataTemplateException(
+                                "Can't get a field entity = %s. Reason: %s".formatted(entity, e.getMessage()), e
+                        );
                     }
                 })
                 .toList();
     }
 
-    private Object getId(T client) {
+    private Object getId(T entity) {
         var idField = entityClassMetaData.getIdField();
         try {
             idField.setAccessible(true);
-            return idField.get(client);
+            return idField.get(entity);
         } catch (IllegalAccessException e) {
-            throw new DataTemplateException(e);
+            throw new DataTemplateException(
+                    "Can't get a field entity = %s. Reason: %s".formatted(entity, e.getMessage()), e
+            );
         }
     }
 
@@ -114,14 +118,18 @@ public class DataTemplateJdbc<T> implements DataTemplate<T> {
                     try {
                         return rs.getObject(fieldName);
                     } catch (SQLException e) {
-                        throw new DataTemplateException(e);
+                        throw new DataTemplateException(
+                                "Can't read a ResultSet. Reason: %s".formatted(e.getMessage()), e
+                        );
                     }
                 })
                 .toArray();
         try {
             return entityClassMetaData.getConstructor().newInstance(entityValueArray);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new DataTemplateException(e);
+            throw new DataTemplateException(
+                    "Can't create a new instance. Values: %s Reason: %s".formatted(entityValueArray, e.getMessage()), e
+            );
         }
     }
 

@@ -11,9 +11,11 @@ import java.util.List;
 public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     private final Class<T> entityClass;
+    private final List<Field> affFields;
 
     public EntityClassMetaDataImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
+        this.affFields = Arrays.asList(entityClass.getDeclaredFields());
     }
 
 
@@ -24,7 +26,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public Constructor<T> getConstructor() {
-        Class<?>[] parameterTypes = getAllFields().stream()
+        Class<?>[] parameterTypes = affFields.stream()
                 .map(Field::getType)
                 .toArray(Class<?>[]::new);
         try {
@@ -36,7 +38,7 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public Field getIdField() {
-        List<Field> idFields = getAllFields().stream()
+        List<Field> idFields = affFields.stream()
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .toList();
         if (idFields.size() > 1) {
@@ -50,12 +52,12 @@ public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     @Override
     public List<Field> getAllFields() {
-        return Arrays.asList(entityClass.getDeclaredFields());
+        return affFields;
     }
 
     @Override
     public List<Field> getFieldsWithoutId() {
-        return getAllFields().stream()
+        return affFields.stream()
                 .filter(field -> !field.isAnnotationPresent(Id.class))
                 .toList();
     }
