@@ -26,3 +26,4 @@
 - hw08-serializable - ДЗ№08 Обработчик json-ов
 - hw09-jdbc - ДЗ№09 Самодельный ORM
 - hw10-jpql - ДЗ№10 Использование Hibernate
+- hw11-cache - ДЗ№11 Свой cache engine
