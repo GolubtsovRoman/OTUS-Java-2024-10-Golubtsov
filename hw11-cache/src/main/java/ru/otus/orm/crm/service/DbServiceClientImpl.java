@@ -60,22 +60,21 @@ public class DbServiceClientImpl implements DBServiceClient {
         if (cachingClient != null) {
             return Optional.of(cachingClient);
         } else {
-            return transactionRunner.doInTransaction(connection -> {
-                var clientOptional = dataTemplate.findById(connection, id);
-                log.info("client: {}", clientOptional);
-                return clientOptional;
-            });
+            var clientOptional = transactionRunner.doInTransaction(connection -> dataTemplate.findById(connection, id));
+            if (clientOptional.isPresent()) {
+                var client = clientOptional.get();
+                cache.put(client.getId(), client);
+            }
+            return clientOptional;
         }
     }
 
     @Override
     public List<Client> findAll() {
         // мы не можем гарантировать, что в кеше будут все клиенты как в БД, даже если кол-во в БД и в кэше совпадает
-        return transactionRunner.doInTransaction(connection -> {
-            var clientList = dataTemplate.findAll(connection);
-            log.info("clientList:{}", clientList);
-            return clientList;
-        });
+        var clientList =  transactionRunner.doInTransaction(dataTemplate::findAll);
+        clientList.forEach(client -> cache.put(client.getId(), client));
+        return clientList;
     }
 
 }
