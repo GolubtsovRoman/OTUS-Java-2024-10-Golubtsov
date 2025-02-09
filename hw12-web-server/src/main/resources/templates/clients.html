@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Пользователи</title>
+<!--    <script>-->
+<!--        function getUserById() {-->
+<!--            const userIdTextBox = document.getElementById('userIdTextBox');-->
+<!--            const userDataContainer = document.getElementById('userDataContainer');-->
+<!--            const id = userIdTextBox.value;-->
+<!--            //fetch('api/user?id=' + id)-->
+<!--            fetch('api/user/' + id)-->
+<!--                .then(response => response.json())-->
+<!--                .then(user => userDataContainer.innerHTML = JSON.stringify(user, null, 4));-->
+<!--        }-->
+<!--    </script>-->
+    <script>
+        function createClient() {
+            const clientNameBox = document.getElementById('clientNameBox');
+            const clientAddressBox = document.getElementById('clientAddressBox');
+            const clientPhonesBox = document.getElementById('clientPhonesBox');
+
+            const client = {
+                name: clientNameBox.value,
+                address: clientAddressBox.value,
+                phones: clientPhonesBox.value.split(",").map(s => s.trim())
+            };
+
+            fetch('/api/client', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(client)
+            })
+                .then(response => response.json())
+                .then(user => createClientDataContainer.innerHTML = JSON.stringify(user, null, 4));
+        }
+    </script>
+    <script>
+        function getAll() {
+            const clientDataContainer = document.getElementById('clientDataContainer');
+
+            fetch('api/client')
+                .then(response => response.json())
+                .then(user => clientDataContainer.innerHTML = JSON.stringify(user, null, 4));
+        }
+    </script>
+    <style type="text/css">
+        input {
+            width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h4>Создать нового клиента</h4>
+<input type="text" id = "clientNameBox" placeholder="Введите имя клиета">
+<br>
+<input type="text" id = "clientAddressBox" placeholder="Введите адрес клиета">
+<br>
+<!--Можно было бы написать js-скрипт, который делает кнопку + для добавления полей ввода-->
+<input type="text" id = "clientPhonesBox" placeholder="Телефон(ы) клиета (ввести через запятую)">
+<br>
+<button onclick="createClient()">Создать</button>
+<pre id = "createClientDataContainer"></pre>
+
+<h4>Получить всех клиентов</h4>
+<!--<input type="text" id = "userIdTextBox" value="3" placeholder="Введите id пользователя">-->
+<!--<button onclick="getUserById()">Получить</button>-->
+<button onclick="getAll()">Получить</button>
+<pre id = "clientDataContainer"></pre>
+
+</body>
+</html>
