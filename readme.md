@@ -28,3 +28,4 @@
 - hw10-jpql - ДЗ№10 Использование Hibernate
 - hw11-cache - ДЗ№11 Свой cache engine
 - hw12-web-server - ДЗ№12 Веб сервер
+- hw13-di - ДЗ№13 Собственный IoC контейнер
