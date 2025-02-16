@@ -24,8 +24,12 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     private final List<Object> appComponents = new ArrayList<>();
     private final Map<String, Object> appComponentsByName = new HashMap<>();
 
-    public AppComponentsContainerImpl(Class<?> initialConfigClass) {
-        processConfig(initialConfigClass);
+
+    public AppComponentsContainerImpl(Class<?> ...initialConfigClasses) {
+        Arrays.stream(initialConfigClasses)
+                .filter(configClass -> configClass.isAnnotationPresent(AppComponentsContainerConfig.class))
+                .sorted(Comparator.comparingInt(configClass -> configClass.getAnnotation(AppComponentsContainerConfig.class).order()))
+                .forEach(this::processConfig);
     }
 
     private void processConfig(Class<?> configClass) {
@@ -99,7 +103,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public <C> C getAppComponent(String componentName) {
         try {
