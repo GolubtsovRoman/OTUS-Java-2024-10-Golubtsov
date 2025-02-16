@@ -1,5 +1,6 @@
 package ru.otus.appcontainer;
 
+import org.reflections.Reflections;
 import ru.otus.appcontainer.api.AppComponent;
 import ru.otus.appcontainer.api.AppComponentsContainer;
 import ru.otus.appcontainer.api.AppComponentsContainerConfig;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @SuppressWarnings("squid:S1068")
 public class AppComponentsContainerImpl implements AppComponentsContainer {
@@ -26,7 +28,18 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
 
     public AppComponentsContainerImpl(Class<?> ...initialConfigClasses) {
-        Arrays.stream(initialConfigClasses)
+        processConfigs(Set.of(initialConfigClasses));
+    }
+
+    public AppComponentsContainerImpl(String configPackageName) {
+        // можно запихнуть валидацию имени пакета
+        Set<Class<?>> allClasses = new Reflections(configPackageName)
+                .getTypesAnnotatedWith(AppComponentsContainerConfig.class);
+        processConfigs(allClasses);
+    }
+
+    private void processConfigs(Set<Class<?>> initialConfigClasses) {
+        initialConfigClasses.stream()
                 .filter(configClass -> configClass.isAnnotationPresent(AppComponentsContainerConfig.class))
                 .sorted(Comparator.comparingInt(configClass -> configClass.getAnnotation(AppComponentsContainerConfig.class).order()))
                 .forEach(this::processConfig);
