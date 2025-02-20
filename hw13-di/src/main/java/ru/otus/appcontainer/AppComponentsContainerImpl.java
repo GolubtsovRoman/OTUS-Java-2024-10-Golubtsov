@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 @SuppressWarnings("squid:S1068")
@@ -85,8 +84,6 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
                 throw new AppComponentConstructorException("Can't create AppConfig");
             }
         }
-
-        System.out.println();
     }
 
     private void checkConfigClass(Class<?> configClass) {
@@ -99,10 +96,8 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     @Override
     public <C> C getAppComponent(Class<C> componentClass) {
         var appComponentsByClass = appComponents.stream()
-                .filter(appComponent -> componentClass.isInterface() ?
-                        Arrays.asList(appComponent.getClass().getInterfaces()).contains(componentClass)
-                        : appComponent.getClass().equals(componentClass)
-                ).toList();
+                .filter(appComponent -> componentClass.isAssignableFrom(appComponent.getClass()))
+                .toList();
         if (appComponentsByClass.isEmpty()) {
             throw new AppComponentException("No such AppComponent: " + componentClass.getName());
         }
@@ -118,11 +113,15 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     @Override
     public <C> C getAppComponent(String componentName) {
-        try {
-            return (C) Optional.ofNullable(appComponentsByName.get(componentName)).orElseThrow(
-                    () -> new AppComponentException("No such AppComponent: " + componentName));
-        } catch (ClassCastException cce) {
-            throw new AppComponentException("Can't cast component: " + componentName, cce);
+        var object = appComponentsByName.get(componentName);
+        if (object != null) {
+            try {
+                return (C) object;
+            } catch (ClassCastException cce) {
+                throw new AppComponentException("Can't cast component: " + componentName, cce);
+            }
+        } else {
+            throw new AppComponentException("No such AppComponent: " + componentName);
         }
     }
 
