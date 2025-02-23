@@ -1,17 +1,7 @@
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Пользователи</title>
-<!--    <script>-->
-<!--        function getUserById() {-->
-<!--            const userIdTextBox = document.getElementById('userIdTextBox');-->
-<!--            const userDataContainer = document.getElementById('userDataContainer');-->
-<!--            const id = userIdTextBox.value;-->
-<!--            //fetch('api/user?id=' + id)-->
-<!--            fetch('api/user/' + id)-->
-<!--                .then(response => response.json())-->
-<!--                .then(user => userDataContainer.innerHTML = JSON.stringify(user, null, 4));-->
-<!--        }-->
-<!--    </script>-->
+    <title>Клиенты</title>
     <script>
         function createClient() {
             const clientNameBox = document.getElementById('clientNameBox');
@@ -66,8 +56,6 @@
 <pre id = "createClientDataContainer"></pre>
 
 <h4>Получить всех клиентов</h4>
-<!--<input type="text" id = "userIdTextBox" value="3" placeholder="Введите id пользователя">-->
-<!--<button onclick="getUserById()">Получить</button>-->
 <button onclick="getAll()">Получить</button>
 <pre id = "clientDataContainer"></pre>
 
