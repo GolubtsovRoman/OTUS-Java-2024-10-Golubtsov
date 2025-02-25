@@ -28,7 +28,9 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public ClientDto save(ClientViewDto clientViewDto) {
-        var savedClient = clientRepository.save(new Client(null, clientViewDto.name(), new Address(null, clientViewDto.address())));
+        var savedClient = clientRepository.save(
+                new Client(null, clientViewDto.name(), new Address(null, clientViewDto.address()))
+        );
 
         var phones = clientViewDto.phones()
                 .stream()
