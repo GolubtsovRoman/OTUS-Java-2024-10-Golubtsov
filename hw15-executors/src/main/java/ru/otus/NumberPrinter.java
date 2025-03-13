@@ -4,8 +4,8 @@ import static ru.otus.Action.REPEAT;
 
 public class NumberPrinter {
 
-    private final int left;
-    private final int right;
+    private final int begin;
+    private final int end;
 
     private final int maxStep;
     private int counter = 1;
@@ -16,16 +16,16 @@ public class NumberPrinter {
 
     private Action lastAction = REPEAT;
 
-    public NumberPrinter(int left, int right, int maxStep) {
-        if (left >= right) {
-            throw new IllegalArgumentException("Left value can't be more or equals right value");
+    public NumberPrinter(int begin, int end, int maxStep) {
+        if (begin >= end) {
+            throw new IllegalArgumentException("Left value can't be more or equals end value");
         }
         if (maxStep < 2) {
             throw new IllegalArgumentException("maxStep value can't be less 2");
         }
-        this.left = left;
-        this.right = right;
-        this.current = left;
+        this.begin = begin;
+        this.end = end;
+        this.current = begin;
         this.maxStep = maxStep;
     }
 
@@ -46,10 +46,10 @@ public class NumberPrinter {
     }
 
     private void make() {
-        if (current == left) {
+        if (current == begin) {
             needInc = true;
         }
-        if (current == right) {
+        if (current == end) {
             needInc = false;
         }
 
