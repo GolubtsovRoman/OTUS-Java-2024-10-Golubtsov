@@ -31,3 +31,4 @@
 - hw13-di - ДЗ№13 Собственный IoC контейнер
 - hw14-spring-data-jdbc - ДЗ№14 Веб-приложение на Spring Boot
 - hw15-executors - ДЗ№15 Последовательность чисел
+- hw16-concurrent-collections - ДЗ№16 Queues
