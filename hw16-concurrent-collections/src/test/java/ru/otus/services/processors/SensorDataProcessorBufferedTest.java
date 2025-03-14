@@ -1,7 +1,6 @@
 package ru.otus.services.processors;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,7 +51,6 @@ class SensorDataProcessorBufferedTest {
     }
 
     @Test
-    @Disabled("Удалить до начала тестирования")
     void shouldExecFlushWhenBufferOverFlow() {
         List<SensorData> sensorDataList = getSensorDataForTest(BUFFER_SIZE + BUFFER_SIZE / 2);
 
@@ -68,7 +66,6 @@ class SensorDataProcessorBufferedTest {
     }
 
     @Test
-    @Disabled("Удалить до начала тестирования")
     void shouldFlushBufferDataSortedByTime() {
         var sensorDataList = new ArrayList<>(getSensorDataForTest(BUFFER_SIZE - 1));
         var originalSensorDataList = List.copyOf(sensorDataList);
@@ -86,7 +83,6 @@ class SensorDataProcessorBufferedTest {
     }
 
     @Test
-    @Disabled("Удалить до начала тестирования")
     void shouldFlushTheRestOfTheBufferDataWhenOnProcessingEndFired() {
         List<SensorData> sensorDataList = getSensorDataForTest(BUFFER_SIZE + BUFFER_SIZE / 2);
         sensorDataList.forEach(sensorData -> processor.process(sensorData));
@@ -103,7 +99,6 @@ class SensorDataProcessorBufferedTest {
     }
 
     @RepeatedTest(100)
-    @Disabled("Удалить до начала тестирования")
     void shouldCorrectFlushDataFromManyThreads() {
         List<SensorData> sensorDataList = getSensorDataForTest(BUFFER_SIZE - 1);
         sensorDataList.forEach(sensorData -> processor.process(sensorData));
@@ -132,7 +127,6 @@ class SensorDataProcessorBufferedTest {
     }
 
     @RepeatedTest(1_000)
-    @Disabled("Удалить до начала тестирования")
     void shouldCorrectFlushDataAndWriteThreads() throws InterruptedException {
         List<SensorData> sensorDataList = getSensorDataForTest(BUFFER_SIZE - 1);
 
