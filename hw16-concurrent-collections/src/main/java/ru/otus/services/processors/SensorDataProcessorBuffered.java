@@ -6,7 +6,14 @@ import ru.otus.api.SensorDataProcessor;
 import ru.otus.api.model.SensorData;
 import ru.otus.lib.SensorDataBufferedWriter;
 
-// Этот класс нужно реализовать
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 @SuppressWarnings({"java:S1068", "java:S125"})
 public class SensorDataProcessorBuffered implements SensorDataProcessor {
     private static final Logger log = LoggerFactory.getLogger(SensorDataProcessorBuffered.class);
@@ -14,25 +21,48 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
     private final int bufferSize;
     private final SensorDataBufferedWriter writer;
 
+    private final BlockingQueue<SensorData> dataBuffer;
+
+    private final Lock flushLock = new ReentrantLock();
+
     public SensorDataProcessorBuffered(int bufferSize, SensorDataBufferedWriter writer) {
+        if (bufferSize < 1) {
+            throw new IllegalArgumentException("Buffer size can't be less 1");
+        }
         this.bufferSize = bufferSize;
         this.writer = writer;
+
+        this.dataBuffer = new PriorityBlockingQueue<>(bufferSize, Comparator.comparing(SensorData::getMeasurementTime));
     }
 
     @Override
     public void process(SensorData data) {
-        /*
-            if (dataBuffer.size() >= bufferSize) {
-                flush();
-            }
-        */
+        if (data == null) {
+            log.debug("SensorData is NULL. Will be not process");
+            return;
+        }
+        if (dataBuffer.size() >= bufferSize) {
+            flush();
+        }
+        boolean isOffer = dataBuffer.offer(data);
+        if (!isOffer) {
+            log.debug("Can't offer data: {}", data);
+        }
     }
 
     public void flush() {
+        flushLock.lock();
+        if (dataBuffer.isEmpty()) {
+            return;
+        }
         try {
-            // writer.writeBufferedData(bufferedData);
+            List<SensorData> bufferedData = new ArrayList<>(bufferSize);
+            dataBuffer.drainTo(bufferedData);
+            writer.writeBufferedData(bufferedData);
         } catch (Exception e) {
             log.error("Ошибка в процессе записи буфера", e);
+        } finally {
+            flushLock.unlock();
         }
     }
 
