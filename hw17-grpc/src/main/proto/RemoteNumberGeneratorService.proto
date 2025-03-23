@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package ru.otus.protobuf;
+
+option java_multiple_files = true;
+
+message IntervalMessage {
+    int32 firstValue = 1;
+    int32 lastValue = 2;
+}
+
+message NumberResult {
+    int32 resultValue = 1;
+}
+
+
+service RemoteNumberGeneratorService {
+    rpc generateStreamNumber(IntervalMessage) returns (stream NumberResult);
+}

@@ -32,3 +32,4 @@
 - hw14-spring-data-jdbc - ДЗ№14 Веб-приложение на Spring Boot
 - hw15-executors - ДЗ№15 Последовательность чисел
 - hw16-concurrent-collections - ДЗ№16 Queues
+- hw17-grpc - ДЗ№17 gRPC клиент-серверное приложение или "Убить босса"

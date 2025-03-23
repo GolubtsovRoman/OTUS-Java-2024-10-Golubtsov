@@ -32,6 +32,7 @@ allprojects {
     val guava: String by project
     val jacksonDatabind: String by project
     val reflections: String by project
+    val grpc: String by project
 
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
@@ -46,6 +47,9 @@ allprojects {
                 dependency("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind")
                 dependency("org.reflections:reflections:$reflections")
 
+                dependency("io.grpc:grpc-netty:$grpc")
+                dependency("io.grpc:grpc-protobuf:$grpc")
+                dependency("io.grpc:grpc-stub:$grpc")
             }
         }
     }
