@@ -1,14 +1,18 @@
 package ru.otus.client.observer;
 
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.protobuf.NumberResult;
 
 import java.util.concurrent.CountDownLatch;
 
 public class NumberObserver implements StreamObserver<NumberResult> {
 
+    private static final Logger log = LoggerFactory.getLogger(NumberObserver.class);
+
     private final CountDownLatch latch;
-    private Integer lastValue;
+    private volatile int lastValue;
 
 
     public NumberObserver(CountDownLatch latch) {
@@ -17,22 +21,22 @@ public class NumberObserver implements StreamObserver<NumberResult> {
 
     @Override
     public void onNext(NumberResult numberResult) {
-        System.out.println("new value:" + numberResult.getResultValue());
+        log.info("new value:{}", numberResult.getResultValue());
         lastValue = numberResult.getResultValue();
     }
 
     @Override
     public void onError(Throwable throwable) {
-        System.err.println("ERROR::" + throwable.getMessage());
+        log.info("ERROR::{}", throwable.getMessage());
     }
 
     @Override
     public void onCompleted() {
-        System.out.println("request completed");
+        log.info("request completed");
         latch.countDown();
     }
 
-    public Integer getLastValue() {
+    public int getLastValue() {
         return lastValue;
     }
 

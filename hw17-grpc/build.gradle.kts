@@ -4,15 +4,7 @@ import com.google.protobuf.gradle.ofSourceSet
 import com.google.protobuf.gradle.plugins
 import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.idea
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.main
-import org.gradle.kotlin.dsl.processResources
 import org.gradle.kotlin.dsl.proto
-import org.gradle.kotlin.dsl.provideDelegate
-import org.gradle.kotlin.dsl.sourceSets
 
 plugins {
     id("idea")
@@ -23,6 +15,8 @@ val errorProneAnnotations: String by project
 val tomcatAnnotationsApi: String by project
 
 dependencies {
+    implementation ("ch.qos.logback:logback-classic")
+
     implementation("io.grpc:grpc-netty")
     implementation("io.grpc:grpc-protobuf")
     implementation("io.grpc:grpc-stub")

@@ -1,6 +1,8 @@
 package ru.otus.client;
 
 import io.grpc.ManagedChannelBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.client.observer.NumberObserver;
 import ru.otus.client.service.NumberPrinter;
 import ru.otus.protobuf.IntervalMessage;
@@ -9,6 +11,8 @@ import ru.otus.protobuf.RemoteNumberGeneratorServiceGrpc;
 import java.util.concurrent.CountDownLatch;
 
 public class ClientApp {
+
+    private static final Logger log = LoggerFactory.getLogger(ClientApp.class);
 
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 8191;
@@ -26,7 +30,7 @@ public class ClientApp {
         var latch = new CountDownLatch(1);
         var numberObserver = new NumberObserver(latch);
 
-        System.out.println("numbers Client is starting...");
+        log.info("numbers Client is starting...");
         stub.generateStreamNumber(buildMessage(FIRST_VALUE, LAST_VALUE), numberObserver);
         NumberPrinter.printStream(numberObserver);
 

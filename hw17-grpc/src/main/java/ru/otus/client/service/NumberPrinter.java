@@ -1,5 +1,7 @@
 package ru.otus.client.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.otus.client.observer.NumberObserver;
 
 import java.time.Duration;
@@ -7,6 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 public class NumberPrinter {
+
+    private static final Logger log = LoggerFactory.getLogger(NumberPrinter.class);
 
     private static final int CYCLE_END = 50;
     private static final Duration SLEEP_TIME = Duration.of(1, ChronoUnit.SECONDS);
@@ -21,7 +25,7 @@ public class NumberPrinter {
             } else {
                 ++currentValue;
             }
-            System.out.println("currentValue:" + currentValue);
+            log.info("currentValue:{}", currentValue);
             rememberValueServer = serverValue;
 
             try {
