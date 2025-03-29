@@ -21,9 +21,7 @@ public class NumberPrinter {
         for (int i = 0; i < CYCLE_END; i++) {
             var serverValue = numberObserver.getLastValue();
             if (!Objects.equals(rememberValueServer, serverValue)) {
-                currentValue += numberObserver.getLastValue() + 1;
-            } else {
-                ++currentValue;
+                currentValue += serverValue + 1;
             }
             log.info("currentValue:{}", currentValue);
             rememberValueServer = serverValue;
@@ -31,7 +29,7 @@ public class NumberPrinter {
             try {
                 Thread.sleep(SLEEP_TIME);
             } catch (InterruptedException ignore) {
-                System.out.println(ignore.getMessage());;
+                System.out.println(ignore.getMessage());
             }
         }
     }
