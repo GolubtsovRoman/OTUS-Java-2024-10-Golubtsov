@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import ru.otus.protobuf.NumberResult;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class NumberObserver implements StreamObserver<NumberResult> {
 
     private static final Logger log = LoggerFactory.getLogger(NumberObserver.class);
 
     private final CountDownLatch latch;
-    private volatile int lastValue;
-
+    private final AtomicReference<Integer> lastValue = new AtomicReference<>();
 
     public NumberObserver(CountDownLatch latch) {
         this.latch = latch;
@@ -22,7 +22,7 @@ public class NumberObserver implements StreamObserver<NumberResult> {
     @Override
     public void onNext(NumberResult numberResult) {
         log.info("new value:{}", numberResult.getResultValue());
-        lastValue = numberResult.getResultValue();
+        this.lastValue.set(numberResult.getResultValue());
     }
 
     @Override
@@ -33,11 +33,11 @@ public class NumberObserver implements StreamObserver<NumberResult> {
     @Override
     public void onCompleted() {
         log.info("request completed");
-        latch.countDown();
+        this.latch.countDown();
     }
 
-    public int getLastValue() {
-        return lastValue;
+    public Integer getLastValue() {
+        return this.lastValue.getAndSet(null);
     }
 
 }
