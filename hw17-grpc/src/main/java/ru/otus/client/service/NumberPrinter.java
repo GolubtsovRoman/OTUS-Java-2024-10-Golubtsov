@@ -17,11 +17,7 @@ public class NumberPrinter {
     public static void printStream(NumberObserver numberObserver) {
         var currentValue = 0;
         for (int i = 0; i < CYCLE_END; i++) {
-            currentValue++;
-            var serverValue = numberObserver.getLastValue();
-            if (null != serverValue) {
-                currentValue += serverValue;
-            }
+            currentValue += numberObserver.getLastValue() + 1;
             log.info("currentValue:{}", currentValue);
 
             try {

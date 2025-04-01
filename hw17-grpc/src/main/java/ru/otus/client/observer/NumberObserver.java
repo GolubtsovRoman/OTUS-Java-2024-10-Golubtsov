@@ -13,7 +13,7 @@ public class NumberObserver implements StreamObserver<NumberResult> {
     private static final Logger log = LoggerFactory.getLogger(NumberObserver.class);
 
     private final CountDownLatch latch;
-    private final AtomicReference<Integer> lastValue = new AtomicReference<>();
+    private final AtomicReference<Integer> lastValue = new AtomicReference<>(0);
 
     public NumberObserver(CountDownLatch latch) {
         this.latch = latch;
@@ -36,8 +36,8 @@ public class NumberObserver implements StreamObserver<NumberResult> {
         this.latch.countDown();
     }
 
-    public Integer getLastValue() {
-        return this.lastValue.getAndSet(null);
+    public int getLastValue() {
+        return this.lastValue.getAndSet(0);
     }
 
 }
