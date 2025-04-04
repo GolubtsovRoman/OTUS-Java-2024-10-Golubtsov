@@ -34,6 +34,13 @@ allprojects {
     val reflections: String by project
     val grpc: String by project
 
+    val sockjs: String by project
+    val stomp: String by project
+    val bootstrap: String by project
+
+    val jsr305: String by project
+    val r2dbcPostgresql: String by project
+
     apply(plugin = "io.spring.dependency-management")
     dependencyManagement {
         dependencies {
@@ -50,6 +57,13 @@ allprojects {
                 dependency("io.grpc:grpc-netty:$grpc")
                 dependency("io.grpc:grpc-protobuf:$grpc")
                 dependency("io.grpc:grpc-stub:$grpc")
+
+                dependency("org.webjars:sockjs-client:$sockjs")
+                dependency("org.webjars:stomp-websocket:$stomp")
+                dependency("org.webjars:bootstrap:$bootstrap")
+
+                dependency("com.google.code.findbugs:jsr305:$jsr305")
+                dependency("io.r2dbc:r2dbc-postgresql:$r2dbcPostgresql")
             }
         }
     }
