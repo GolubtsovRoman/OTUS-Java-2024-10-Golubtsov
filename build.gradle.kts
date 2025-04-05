@@ -51,6 +51,7 @@ allprojects {
                 }
 
                 dependency("com.google.guava:guava:$guava")
+                dependency("com.fasterxml.jackson.core:jackson-core:$jacksonDatabind")
                 dependency("com.fasterxml.jackson.core:jackson-databind:$jacksonDatabind")
                 dependency("org.reflections:reflections:$reflections")
 

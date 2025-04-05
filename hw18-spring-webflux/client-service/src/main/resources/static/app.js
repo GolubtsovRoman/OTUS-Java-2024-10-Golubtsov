@@ -3,6 +3,9 @@ let stompClient = null;
 const chatLineElementId = "chatLine";
 const roomIdElementId = "roomId";
 const messageElementId = "message";
+const messageTitleElementId = "messageTitle";
+const buttonElementId = "send";
+const magicRoom = "1408";
 
 
 const setConnected = (connected) => {
@@ -22,6 +25,13 @@ const connect = () => {
         const userName = frame.headers["user-name"];
         const roomId = document.getElementById(roomIdElementId).value;
         console.log(`Connected to roomId: ${roomId} frame:${frame}`);
+
+        if (magicRoom === roomId) {
+            document.getElementById(messageTitleElementId).style.display = 'none';
+            document.getElementById(messageElementId).style.display = 'none';
+            document.getElementById(buttonElementId).style.display = 'none';
+        }
+
         const topicName = `/topic/response.${roomId}`;
         const topicNameUser = `/user/${userName}${topicName}`;
         stompClient.subscribe(topicName, (message) => showMessage(JSON.parse(message.body).messageStr));

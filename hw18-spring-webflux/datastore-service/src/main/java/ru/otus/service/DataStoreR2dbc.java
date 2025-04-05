@@ -19,6 +19,8 @@ public class DataStoreR2dbc implements DataStore {
     private final MessageRepository messageRepository;
     private final Scheduler workerPool;
 
+    private static final Duration MESSAGE_DURATION = Duration.of(1, SECONDS);
+
     public DataStoreR2dbc(Scheduler workerPool, MessageRepository messageRepository) {
         this.workerPool = workerPool;
         this.messageRepository = messageRepository;
@@ -33,6 +35,13 @@ public class DataStoreR2dbc implements DataStore {
     @Override
     public Flux<Message> loadMessages(String roomId) {
         log.info("loadMessages roomId:{}", roomId);
-        return messageRepository.findByRoomId(roomId).delayElements(Duration.of(3, SECONDS), workerPool);
+        return messageRepository.findByRoomId(roomId).delayElements(MESSAGE_DURATION, workerPool);
     }
+
+    @Override
+    public Flux<Message> loadAllMessages() {
+        log.info("loadAllMessages");
+        return messageRepository.findAll().delayElements(MESSAGE_DURATION, workerPool);
+    }
+
 }
