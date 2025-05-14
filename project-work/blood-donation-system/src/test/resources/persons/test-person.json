@@ -1,0 +1,102 @@
+[
+  {
+    "fullName": "Иванов Иван Иванович",
+    "gender": "MALE",
+    "snils": "350-360-203-23",
+    "phone": "+7 912 345-67-89",
+    "email": "ivanov@example.com",
+    "birthDate": "1985-05-15",
+    "workplace": "ООО Ромашка",
+    "position": "Менеджер"
+  },
+  {
+    "fullName": "Петрова Анна Сергеевна",
+    "gender": "FEMALE",
+    "snils": "374-409-352-91",
+    "phone": "+7 912 987-65-43",
+    "email": "petrova@example.com",
+    "birthDate": "1990-08-20",
+    "workplace": "ЗАО Лотос",
+    "position": "Директор"
+  },
+  {
+    "fullName": "Сидоров Алексей Викторович",
+    "gender": "MALE",
+    "snils": "015-055-274-11",
+    "phone": "+7 912 654-32-10",
+    "email": "sidorov@example.com",
+    "birthDate": "1982-12-30",
+    "workplace": "ИП Сидоров",
+    "position": "Разработчик"
+  },
+  {
+    "fullName": "Кузнецова Мария Павловна",
+    "gender": "FEMALE",
+    "snils": "693-116-441-01",
+    "phone": "+7 912 321-09-87",
+    "email": "kuznetsova@example.com",
+    "birthDate": "1995-03-10",
+    "workplace": "АО Солнце",
+    "position": "Бухгалтер"
+  },
+  {
+    "fullName": "Смирнов Дмитрий Александрович",
+    "gender": "MALE",
+    "snils": "605-659-850-18",
+    "phone": "+7 912 456-78-90",
+    "email": "smirnov@example.com",
+    "birthDate": "1988-07-25",
+    "workplace": "ООО Ветер",
+    "position": "Аналитик"
+  },
+  {
+    "fullName": "Федорова Ольга Николаевна",
+    "gender": "FEMALE",
+    "snils": "046-834-632-78",
+    "phone": "+7 912 789-01-23",
+    "email": "fedorova@example.com",
+    "birthDate": "1992-11-05",
+    "workplace": "ЗАО Река",
+    "position": "Маркетолог"
+  },
+  {
+    "fullName": "Григорьев Сергей Владимирович",
+    "gender": "MALE",
+    "snils": "499-875-712-97",
+    "phone": "+7 912 147-25-68",
+    "email": "grigoryev@example.com",
+    "birthDate": "1980-01-15",
+    "workplace": "ООО Луна",
+    "position": "Инженер"
+  },
+  {
+    "fullName": "Лебедева Екатерина Андреевна",
+    "gender": "FEMALE",
+    "snils": "070-551-326-33",
+    "phone": "+7 912 258-36-79",
+    "email": "lebedeva@example.com",
+    "birthDate": "1993-09-12",
+    "workplace": "АО Звезда",
+    "position": "Дизайнер"
+  },
+  {
+    "fullName": "Ковалев Андрей Сергеевич",
+    "gender": "MALE",
+    "snils": "167-778-421-30",
+    "phone": "+7 912 369-14-57",
+    "email": "kovalev@example.com",
+    "birthDate": "1987-04-22",
+    "workplace": "ИП Ковалев",
+    "position": "Программист"
+  },
+  {
+    "fullName": "Соколова Наталья Викторовна",
+    "gender": "FEMALE",
+    "snils": "506-064-121-40",
+    "phone": "+7 912 159-75-48",
+    "email": "sokolova@example.com",
+    "birthDate": "1991-06-18",
+    "workplace": "ООО Глобус",
+    "position": "HR-менеджер"
+  }
+]
