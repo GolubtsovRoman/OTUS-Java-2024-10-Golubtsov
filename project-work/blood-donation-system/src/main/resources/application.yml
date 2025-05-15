@@ -1,0 +1,36 @@
+
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+    packages-to-scan: ru.otus.java.dev.pro.controller
+
+spring:
+
+  application:
+    name: blood-donation-system
+
+  datasource:
+    url: jdbc:postgresql://localhost:5430/blood-donation
+    username: usr
+    password: pwd
+    driver-class-name: org.postgresql.Driver
+
+
+application:
+  database:
+    init-data: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
